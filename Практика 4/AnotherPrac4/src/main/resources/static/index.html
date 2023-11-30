@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<meta charset="UTF-8">
+<head>
+    <title>WebSocket Клиент</title>
+    <style>
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .input-text {
+            width: 300px;
+            height: 30px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        .output {
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: auto;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+<button id="connect" class="button">Подключиться к сокету</button>
+<button id="send" class="button">Отправить</button>
+<input type="text" id="message" class="input-text" placeholder="Сообщение">
+<div id="output" class="output"></div>
+
+<script>
+        let webSocket = null;
+        const output = document.getElementById('output');
+        const connectButton = document.getElementById('connect');
+        const sendButton = document.getElementById('send');
+        const messageInput = document.getElementById('message');
+
+        connectButton.addEventListener('click', () => {
+            webSocket = new WebSocket('ws://localhost:8080/webs');
+            webSocket.onmessage = event => {
+                output.innerHTML += `<p>Получено: ${event.data}</p>`;
+            };
+        });
+
+        sendButton.addEventListener('click', () => {
+            if (webSocket) {
+                webSocket.send(messageInput.value);
+                output.innerHTML += `<p>Отправлено: ${messageInput.value}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
